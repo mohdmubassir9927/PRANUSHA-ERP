@@ -1,2 +1,79 @@
-<!doctype html>
-<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>PRANUSHA ERP</title></head><body><div id="root"></div><script type="module" src="/src/main.jsx"></script></body></html>
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>PRANUSHA ERP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body{font-family:Arial;margin:0;background:#eef2f7}
+header{background:#142b4a;color:white;padding:25px}
+nav{background:white;padding:12px;display:flex;gap:8px;overflow:auto}
+button{padding:12px;background:#087e8b;color:white;border:0;border-radius:6px}
+main{padding:15px}
+.card{background:white;padding:20px;margin:10px 0;border-radius:10px}
+input,select{display:block;width:95%;padding:12px;margin:10px 0}
+.page{display:none}.active{display:block}
+</style>
+</head>
+<body>
+<header>
+<h2>PRANUSHA ERP</h2>
+Pranusha Infratech Pvt. Ltd.
+<p>Nabi Nagar, Bihar</p>
+</header>
+<nav>
+<button onclick="page('home')">Dashboard</button>
+<button onclick="page('expense')">Expenses</button>
+<button onclick="page('bill')">Billing</button>
+</nav>
+<main>
+<section id="home" class="page active">
+<div class="card"><h2>Dashboard</h2>
+<p>Total Billing: ₹<span id="b">0</span></p>
+<p>Total Expenses: ₹<span id="e">0</span></p>
+<p>Profit / Loss: ₹<span id="p">0</span></p>
+</div>
+</section>
+<section id="expense" class="page">
+<div class="card">
+<h2>Site Expenses</h2>
+<form id="ef">
+<input type="date" id="ed" required>
+<select id="et"><option>Labour</option><option>Material</option><option>Transport</option><option>Other</option></select>
+<input id="en" placeholder="Details" required>
+<input type="number" id="ea" placeholder="Amount" required>
+<button>Save Expense</button>
+</form>
+<div id="elist"></div>
+</div>
+</section>
+<section id="bill" class="page">
+<div class="card">
+<h2>RA Bill / Final Bill</h2>
+<form id="bf">
+<input type="date" id="bd" required>
+<select id="bt"><option>RA Bill</option><option>Final Bill</option></select>
+<input id="bn" placeholder="Bill Number" required>
+<input type="number" id="ba" placeholder="Bill Amount" required>
+<button>Save Bill</button>
+</form>
+<div id="blist"></div>
+</div>
+</section>
+</main>
+<script>
+let ex=JSON.parse(localStorage.getItem('ex')||'[]');
+let bi=JSON.parse(localStorage.getItem('bi')||'[]');
+function page(id){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active')}
+ef.onsubmit=function(a){a.preventDefault();ex.push([ed.value,et.value,en.value,+ea.value]);localStorage.setItem('ex',JSON.stringify(ex));ef.reset();render()};
+bf.onsubmit=function(a){a.preventDefault();bi.push([bd.value,bt.value,bn.value,+ba.value]);localStorage.setItem('bi',JSON.stringify(bi));bf.reset();render()};
+function render(){
+let x=ex.reduce((s,r)=>s+r[3],0),y=bi.reduce((s,r)=>s+r[3],0);
+e.innerText=x;b.innerText=y;p.innerText=y-x;
+elist.innerHTML=ex.map(r=>'<p>'+r.join(' | ')+'</p>').join('');
+blist.innerHTML=bi.map(r=>'<p>'+r.join(' | ')+'</p>').join('');
+}
+render();
+</script>
+</body>
+</html>
